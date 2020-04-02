@@ -21,8 +21,9 @@ import javax.inject.Singleton
     ActivityBuilder::class,
     RepositoryModule::class,
     NetworkModule::class,
-
     AppScreanModule::class,
+
+
 
     TestModel::class
 ])
