@@ -8,7 +8,7 @@ import dagger.android.support.AndroidSupportInjectionModule
 import skripa.ru.fuunymoments.di.FunnyMomentsApplication
 import skripa.ru.fuunymoments.di.module.*
 import skripa.ru.fuunymoments.presentation.app.AppScreanModule
-import skripa.ru.fuunymoments.presentation.testFragment.TestModel
+import skripa.ru.fuunymoments.presentation.testFragment.TestModule
 import javax.inject.Singleton
 
 @Singleton
@@ -21,11 +21,8 @@ import javax.inject.Singleton
     ActivityBuilder::class,
     RepositoryModule::class,
     NetworkModule::class,
-    AppScreanModule::class,
+    AppScreanModule::class
 
-
-
-    TestModel::class
 ])
 interface AppComponent : AndroidInjector <FunnyMomentsApplication> {
 

@@ -11,14 +11,14 @@ import androidx.moxy.MvpAppCompatActivity
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
+import dagger.android.HasAndroidInjector
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import skripa.ru.fuunymoments.R
 import javax.inject.Inject
 
-abstract class BaseActivity : MvpAppCompatActivity(), HasSupportFragmentInjector {
+abstract class BaseActivity : MvpAppCompatActivity(), HasAndroidInjector {
 
     protected abstract val layoutRes: Int
 
@@ -26,10 +26,11 @@ abstract class BaseActivity : MvpAppCompatActivity(), HasSupportFragmentInjector
     lateinit var navigatorHolder: NavigatorHolder
 
     @Inject
-    lateinit var fragmentInjector: DispatchingAndroidInjector<Fragment>
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
 
     protected val navigator: Navigator = SupportAppNavigator(this, R.id.mainContainer)
 
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -39,10 +40,6 @@ abstract class BaseActivity : MvpAppCompatActivity(), HasSupportFragmentInjector
     }
 
     protected abstract fun initView()
-
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> {
-        return fragmentInjector
-    }
 
     override fun onResumeFragments() {
         navigatorHolder.setNavigator(navigator)
@@ -57,10 +54,10 @@ abstract class BaseActivity : MvpAppCompatActivity(), HasSupportFragmentInjector
     override fun dispatchTouchEvent(@NonNull event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_DOWN) {
             val view = currentFocus
-            if (view is EditText) {
+            if (view != null) {
                 val imm =
                     applicationContext.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                imm.hideSoftInputFromWindow(view!!.windowToken, 0)
+                imm.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
         return super.dispatchTouchEvent(event)

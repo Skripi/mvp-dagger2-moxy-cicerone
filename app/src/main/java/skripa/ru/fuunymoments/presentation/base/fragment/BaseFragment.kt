@@ -12,22 +12,25 @@ import androidx.fragment.app.Fragment
 import androidx.moxy.MvpAppCompatFragment
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import dagger.android.support.AndroidSupportInjection
-import dagger.android.support.HasSupportFragmentInjector
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.plusAssign
 import skripa.ru.fuunymoments.presentation.base.mvp.BaseView
 import javax.inject.Inject
 
-abstract class BaseFragment : MvpAppCompatFragment(), BaseView, HasSupportFragmentInjector {
+abstract class BaseFragment : MvpAppCompatFragment(), BaseView, HasAndroidInjector {
 
     protected abstract val layoutRes: Int
 
-    @Inject
-    lateinit var childFragmentInjector: DispatchingAndroidInjector<Fragment>
+    /*@Inject
+    lateinit var childFragmentInjector: DispatchingAndroidInjector<Fragment>*/
 
-    override fun supportFragmentInjector(): AndroidInjector<Fragment> = childFragmentInjector
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
+
+    override fun androidInjector(): AndroidInjector<Any> = androidInjector
 
     override fun onCreateView(inflater: LayoutInflater,
                               viewGroup: ViewGroup?,
@@ -36,7 +39,6 @@ abstract class BaseFragment : MvpAppCompatFragment(), BaseView, HasSupportFragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initView()
     }
 
@@ -48,18 +50,6 @@ abstract class BaseFragment : MvpAppCompatFragment(), BaseView, HasSupportFragme
     }
 
     open fun onBackPressed(){}
-
-
-    // show keyboard
-    /*@RequiresApi(Build.VERSION_CODES.M)
-    protected fun toggleKeyboard(show: Boolean = true) {
-        val showFlags: Int =
-            if (show) InputMethodManager.SHOW_FORCED
-            else InputMethodManager.HIDE_IMPLICIT_ONLY
-
-        context?.getSystemService(InputMethodManager::class.java)
-            ?.toggleSoftInput(showFlags, 0)
-    }*/
 
     //Auto Disposable
 

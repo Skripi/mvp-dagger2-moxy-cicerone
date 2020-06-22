@@ -5,7 +5,7 @@ import dagger.Provides
 import ru.terrakok.cicerone.Router
 
 @Module
-class TestModel {
+class TestModule {
 
     @Provides
     fun providePresenter(router: Router): TestPresenter
